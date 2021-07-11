@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">QuizApp</string>
+    <string name="title_text">QuizApp</string>
+    <string name="out_of_text">Question: 45/89</string>
+    <string name="true_button">true</string>
+    <string name="false_button">false</string>
+    <string name="next_button">next</string>
+    <string name="placeholder">Hello, here we will add our questions</string>
+    <string name="text_formatted">Question: %d/%d</string>
+    <string name="correct_answer">correct</string>
+    <string name="incorrect">incorrect</string>
+</resources>
