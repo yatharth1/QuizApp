@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void shakeAnimation(){
-        Animation shake  = AnimationUtils.loadAnimation(MainActivity.this,
-                R.anim.shake_animation);
+        Animation shake  = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake_animation);
         binding.cardView.setAnimation(shake);
     }
 }
