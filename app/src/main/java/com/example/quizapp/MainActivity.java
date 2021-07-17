@@ -1,6 +1,8 @@
 package com.example.quizapp;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         int snackMessageId = 0;
         if(userChoice == answer){
             snackMessageId = R.string.correct_answer;
+            fadeAnimation();
         }else{
             snackMessageId = R.string.incorrect;
             shakeAnimation();
@@ -80,5 +83,48 @@ public class MainActivity extends AppCompatActivity {
     private void shakeAnimation(){
         Animation shake  = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake_animation);
         binding.cardView.setAnimation(shake);
+
+        shake.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                binding.questionText.setTextColor(Color.RED);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                binding.questionText.setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void fadeAnimation(){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setDuration(300);
+        alphaAnimation.setRepeatCount(1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+
+        binding.cardView.setAnimation(alphaAnimation);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                binding.questionText.setTextColor(Color.GREEN);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                binding.questionText.setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }
