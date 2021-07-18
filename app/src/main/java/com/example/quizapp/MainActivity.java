@@ -9,12 +9,14 @@ import android.view.animation.AnimationUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.quizapp.Util.Prefs;
 import com.example.quizapp.data.Repository;
 import com.example.quizapp.databinding.ActivityMainBinding;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.model.Score;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     private int scoreCounter = 0;
     private Score score;
+    private Prefs prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         score = new Score();
+        prefs  = new Prefs(MainActivity.this);
+
+        binding.highestScore.setText(MessageFormat.format("Highest: {0}",
+                String.valueOf(prefs.getHighestScore())));
+
+        binding.scoreText.setText(MessageFormat.format("Current Score: {0}",
+                String.valueOf(score.getScore())));
+
+
 
         questionList = new Repository().getQuestion(questionArrayList -> {
                     binding.questionText.setText(questionArrayList.get(currentQuestionIndex)
@@ -41,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         );
         binding.buttonNext.setOnClickListener(v -> {
-            currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
-            updateQuestion();
+            getNextQuestion();
         });
 
         binding.buttonTrue.setOnClickListener(v -> {
@@ -56,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getNextQuestion() {
+        currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
+        updateQuestion();
     }
 
     private void checkAnswer(boolean userChoice) {
@@ -99,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 binding.questionText.setTextColor(Color.WHITE);
+                getNextQuestion();
             }
 
             @Override
@@ -125,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 binding.questionText.setTextColor(Color.WHITE);
+                getNextQuestion();
             }
 
             @Override
@@ -138,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
         if(scoreCounter > 0) {
             scoreCounter -= 100;
             score.setScore(scoreCounter);
-            binding.scoreText.setText(String.valueOf(score.getScore()));
+            binding.scoreText.setText(MessageFormat.format("Current Score: {0}",
+                    String.valueOf(score.getScore())));
         }else{
             scoreCounter = 0;
             score.setScore(scoreCounter);
@@ -149,5 +168,13 @@ public class MainActivity extends AppCompatActivity {
         scoreCounter += 100;
         score.setScore(scoreCounter);
         binding.scoreText.setText(String.valueOf(score.getScore()));
+        binding.scoreText.setText(MessageFormat.format("Current Score: {0}",
+                    String.valueOf(score.getScore())));
+    }
+
+    @Override
+    protected void onPause() {
+        prefs.saveHighestScore(score.getScore());
+        super.onPause();
     }
 }
