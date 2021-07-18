@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         score = new Score();
         prefs  = new Prefs(MainActivity.this);
 
+        //Retrieve last state of ques/App
+        currentQuestionIndex = prefs.getState();
+
+
         binding.highestScore.setText(MessageFormat.format("Highest: {0}",
                 String.valueOf(prefs.getHighestScore())));
 
@@ -175,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         prefs.saveHighestScore(score.getScore());
+        prefs.setState(currentQuestionIndex);
         super.onPause();
     }
 }
